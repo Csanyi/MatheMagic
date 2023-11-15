@@ -1,4 +1,3 @@
-# [User story title]
 **AS** *user*
 **I WANT** *something*
 **SO** *I can achieve this*
