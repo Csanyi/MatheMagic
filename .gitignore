@@ -70,3 +70,18 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+/[Aa]ssets/[Ff]irebase/
+/[Aa]ssets/[Pp]lugins/
+/[Aa]ssets/[Ff]irebase/
+/[Aa]ssets/[Ee]ditor [Dd]efault [Rr]esources/
+/[Aa]ssets/[Ee]xternal[Dd]ependency[Mm]anager/
+/[Aa]ssets/[Ss]treaming[Aa]ssets/
+
+/[Aa]ssets/[Pp]lugins.meta
+/[Aa]ssets/[Ff]irebase.meta
+/[Aa]ssets/[Ee]ditor [Dd]efault [Rr]esources.meta
+/[Aa]ssets/[Ee]xternal[Dd]ependency[Mm]anager.meta
+/[Aa]ssets/[Ss]treaming[Aa]ssets.meta
+
+
