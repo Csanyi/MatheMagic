@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "728891445686",
+    "project_id": "mathemagic-project",
+    "storage_bucket": "mathemagic-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728891445686:android:96828c66d3ae8b955f3117",
+        "android_client_info": {
+          "package_name": "com.company.mathemagic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa25l74Ha_Z-rsuwt3LBIeirkG3lzJ56A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
