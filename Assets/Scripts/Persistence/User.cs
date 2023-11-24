@@ -3,6 +3,12 @@ using System;
 
 namespace Assets.Scripts.Persistence
 {
+	public enum Characters
+	{
+		Male,
+		Female,
+	};
+
 	[FirestoreData]
 	public class User
 	{
@@ -41,5 +47,11 @@ namespace Assets.Scripts.Persistence
 				_class = value;
 			}
 		}
+
+		[FirestoreProperty]
+		public int Xp { get; set; }
+
+		[FirestoreProperty]
+		public Characters Character {  get; set; }
 	}
 }
