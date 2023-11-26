@@ -23,17 +23,23 @@ public class Lock
         return this.lockDigits;
     }
 
-    public void rotateDigit(int index, bool up)
+    public void RotateDigit(int index, bool up)
     {
         if (up)
         {
-            lockDigits[index]++;
+            this.lockDigits[index]++;
         }
         else
         {
-            lockDigits[index]--;
+            this.lockDigits[index]--;
         }
-        lockDigits[index] %= 10;
+        this.lockDigits[index] %= 10;
+    }
+
+    public bool IsDigitCorrect(int index)
+    {
+        int localValue = (int)Math.Pow(10, this.lockDigits.Length - index);
+        return this.lockDigits[index] == ((int)(this.exercise.GetResult() / localValue) % 10);
     }
 
     private int GetCurrentResult()
