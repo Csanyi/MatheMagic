@@ -25,9 +25,8 @@ jobs:
       - name: Run tests
         uses: game-ci/unity-test-runner@v4
         env:
-            : ${{ secrets.UNITY_LICENSE }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
-          unityVersion: [your desired Unity version]
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
   buildAndroid:
