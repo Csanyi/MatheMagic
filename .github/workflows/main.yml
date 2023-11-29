@@ -3,33 +3,72 @@ name: Actions
 on: [push, pull_request]
 
 jobs:
-  testRunner:
+  jobs:
+    testRunner:
     name: Test
     runs-on: ubuntu-latest
+
     steps:
-      # Checkout
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          lfs: true
 
-      # Cache
-      - uses: actions/cache@v3
+      - name: Setup Unity
+        uses: game-ci/setup-unity@v1
         with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
+          unityVersion: 2022.3.12f1
+          components: ['unity', 'android']
 
-      # Test
-      - name: Run tests
-        uses: game-ci/unity-test-runner@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      - name: Activate Unity License
+        run: |
+          sudo /opt/unity/Editor/Unity \
+            -batchmode \
+            -quit \
+            -serial ${{ secrets.UNITY_LICENSE }} \
+            -username ${{ secrets.UNITY_EMAIL }} \
+            -password ${{ secrets.UNITY_PASSWORD }}
+
+      - name: Run Tests
+        run: |
+          /opt/unity/Editor/Unity \
+            -projectPath ${{ github.workspace }} \
+            -runTests \
+            -editorTestsResultFile ${{ github.workspace }}/testResults.xml \
+            -batchmode \
+            -quit
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          name: test-results
+          path: ${{ github.workspace }}/testResults.xml
+
+  # testRunner:
+    # name: Test
+    # runs-on: ubuntu-latest
+    # steps:
+      # # Checkout
+      # - name: Checkout repository
+        # uses: actions/checkout@v4
+        # with:
+          # lfs: true
+
+      # # Cache
+      # - uses: actions/cache@v3
+        # with:
+          # path: Library
+          # key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          # restore-keys: |
+            # Library-
+
+      # # Test
+      # - name: Run tests
+        # uses: game-ci/unity-test-runner@v4
+        # env:
+          # UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          # UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          # UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        # with:
+          # githubToken: ${{ secrets.GITHUB_TOKEN }}
 
   # buildAndroid:
     # name: Build
