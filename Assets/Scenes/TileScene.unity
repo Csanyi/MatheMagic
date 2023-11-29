@@ -198,8 +198,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rows: 5
   cols: 8
-  spriteWidth: 50
-  spriteHeight: 50
+  spriteWidth: 150
+  spriteHeight: 150
   tilePrefab: {fileID: 2310281119039305455, guid: b9709a2f1aacb7449a2efead79296e67, type: 3}
   mainCanvas: {fileID: 1744404701}
   gameLogic: {fileID: 413282539}

@@ -23,7 +23,7 @@ public class MapGeneratorScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Vector3 offset = new Vector3(-50, -50, 0);
+        Vector3 offset = new Vector3(-400, -300, 0);
 
         for (int i = 0; i < rows; i++)
         {
