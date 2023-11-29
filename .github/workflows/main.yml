@@ -3,8 +3,7 @@ name: Actions
 on: [push, pull_request]
 
 jobs:
-  jobs:
-    testRunner:
+  testRunner:
     name: Test
     runs-on: ubuntu-latest
 
