@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PopupManager : MonoBehaviour
+public class SettingPopUp : MonoBehaviour
 {   
     public GameObject popupPanel;
     public TextMeshProUGUI textObject;
@@ -11,8 +11,6 @@ public class PopupManager : MonoBehaviour
 
     private void Start()
     {
-        // Kezdetben elrejtjük a pop-up ablakot
-
         if (popupPanel == null)
         {
             popupPanel = GameObject.Find("Settings");
@@ -22,8 +20,6 @@ public class PopupManager : MonoBehaviour
             // GameObject sliderObject = GameObject.Find("Slider");
             //VolumeSliderGet = GameObject.Find("Volume Slider").GetComponent<Slider>();
 
-
-            // Ellenõrizzük, hogy a GameObject megtalálható-e
             if (popupPanel == null)
             {
                 Debug.LogError("PopupPanel not assigned and could not be found!");
@@ -39,13 +35,11 @@ public class PopupManager : MonoBehaviour
 
     public void ShowPopup()
     {
-        // Megjelenítjük a pop-up ablakot
         popupPanel.SetActive(true);
     }
 
     public void ClosePopup()
     {
-        // Elrejtjük a pop-up ablakot
         popupPanel.SetActive(false);
     }
 
@@ -56,7 +50,7 @@ public class PopupManager : MonoBehaviour
         {
             currentYear++;
         }
-        textObject.text = currentYear + ". Évfolyam";
+        textObject.text = currentYear + ". Osztály";
     }
     public void SelectLeft()
     {
@@ -65,17 +59,17 @@ public class PopupManager : MonoBehaviour
         {
             currentYear--;
         }
-        textObject.text = currentYear + ". Évfolyam";
+        textObject.text = currentYear + ". Osztály";
 
     }
 
     private void OnSliderValueChanged(float value)
     {
-        // Mentse el az aktuális értéket a változóba
+        
         float savedValue = value;
         Debug.Log(savedValue);
 
-        // Ide írhatod az érték mentésével kapcsolatos további logikát vagy fájlba írást
+        
     }
 
     public void ClickedSave()
