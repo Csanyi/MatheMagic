@@ -1,5 +1,6 @@
 using System;
 
+// TODO: Consistent enums with other uses in the code
 public enum Grade
 {
     FIRST,
@@ -18,10 +19,11 @@ public enum Operation
 
 public class Exercise
 {
-    int operand1,
+    private int
+        operand1,
         operand2,
         result;
-    Operation operationType;
+    private Operation operationType;
 
     public Exercise(int operand1, int operand2, int result, Operation operationType)
     {
@@ -36,7 +38,7 @@ public class Exercise
     public Operation GetOperationType() { return this.operationType; }
     public int GetResult() { return this.result; }
 
-    String GetOperationSign()
+    private String GetOperationSign()
     {
         switch (this.operationType)
         {
@@ -53,12 +55,12 @@ public class Exercise
         }
     }
 
-    public String PrintExercise()
+    public String ExerciseString()
     {
         return this.operand1 + " " + GetOperationSign() + " " + this.operand2 + " = " + this.result;
     }
 
-    public String PrintExerciseWithoutResult()
+    public String ExerciseStringWithoutResult()
     {
         return this.operand1 + " " + GetOperationSign() + " " + this.operand2 + " = ?";
     }
@@ -66,11 +68,16 @@ public class Exercise
 
 public class GameHelper
 {
-    static Random random = new Random();
+    private static Random random = new Random();
 
-    public static int GenerateRandomNumber(int n, int m)
+    public static int GenerateRandomNumberInclusive(int min, int max)
     {
-        return random.Next(n, m + 1);
+        return random.Next(min, max + 1);
+    }
+
+    public static bool GenerateRandomBool()
+    {
+        return random.Next(2) % 2 == 0;
     }
 
     public static Exercise GenerateRandomExercise(Operation operation, int digits)

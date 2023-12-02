@@ -5,11 +5,11 @@ public class Lock
     private Exercise exercise;
     private int[] lockDigits;
 
-    static Random random = new Random();
-
     public Lock(int digits)
     {
-        this.exercise = GameHelper.GenerateRandomExercise((random.Next(2) == 0) ? Operation.ADDITION : Operation.SUBTRACTION, digits);
+        this.exercise = GameHelper.GenerateRandomExercise(
+            GameHelper.GenerateRandomBool() ? Operation.ADDITION : Operation.SUBTRACTION,
+            digits);
         this.lockDigits = new int[digits];
     }
 
@@ -18,20 +18,21 @@ public class Lock
         return this.exercise;
     }
 
-    public int[] GetLockDigits()
+    public int GetLockDigit(int index)
     {
-        return this.lockDigits;
+        return this.lockDigits[index];
     }
 
     public void RotateDigit(int index, bool up)
     {
         if (up)
         {
-            this.lockDigits[index]++;
+            ++this.lockDigits[index];
         }
         else
         {
-            this.lockDigits[index]--;
+            --this.lockDigits[index];
+            this.lockDigits[index] += 10;
         }
         this.lockDigits[index] %= 10;
     }
@@ -39,7 +40,7 @@ public class Lock
     public bool IsDigitCorrect(int index)
     {
         int localValue = (int)Math.Pow(10, this.lockDigits.Length - index);
-        return this.lockDigits[index] == ((int)(this.exercise.GetResult() / localValue) % 10);
+        return this.lockDigits[index] == (this.exercise.GetResult() / localValue) % 10;
     }
 
     private int GetCurrentResult()

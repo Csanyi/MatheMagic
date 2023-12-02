@@ -48,8 +48,6 @@ public class Box
     private bool labeledWithExercises;
     private List<Exercise> containerLabels = new List<Exercise>();
 
-    static Random random = new Random();
-
     public Box(bool labeledWithExercises, Grade grade, int numberOfContainers)
     {
         this.labeledWithExercises = labeledWithExercises;
@@ -67,7 +65,7 @@ public class Box
         }
         else
         {
-            int numberOfItemsPerContainer = random.Next(1, 10);
+            int numberOfItemsPerContainer = GameHelper.GenerateRandomNumberInclusive(1, 9);
             for (int i = 0; i < numberOfContainers; i++)
             {
                 this.containers.Add(new Container(numberOfItemsPerContainer));

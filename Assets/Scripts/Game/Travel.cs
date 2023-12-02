@@ -37,7 +37,7 @@ public class Travel
     {
         if (result == this.currentExercise.GetResult())
         {
-            this.currentPositionOnPath++;
+            ++this.currentPositionOnPath;
             this.currentExercise = this.IsFinished() ? null : GameHelper.GenerateRandomExercise(this.grade);
             return true;
         }

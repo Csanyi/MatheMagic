@@ -26,19 +26,19 @@ class ColorField
         this.colorCode = colorCode;
     }
 
-    public void SetColored(bool value)
+    public void SetColored()
     {
-        colored = value;
+        this.colored = true;
     }
 
     public bool GetColored()
     {
-        return colored;
+        return this.colored;
     }
 
     public ColorCode GetColorCode()
     {
-        return colorCode;
+        return this.colorCode;
     }
 }
 
@@ -54,12 +54,12 @@ public class Coloring
         // TODO: generate numbers
         foreach (var item in distinctColorCodes)
         {
-            colors.Add((item, -1));
+            this.colors.Add((item, -1));
         }
 
         foreach (var item in colorCodeList)
         {
-            fields.Add((new ColorField(item), GameHelper.GenerateRandomExercise(grade))); // TODO: generate exercise based on result
+            this.fields.Add((new ColorField(item), GameHelper.GenerateRandomExercise(grade))); // TODO: generate exercise based on result
         }
 
         this.currentSelectedColorIndex = 0;
@@ -72,9 +72,9 @@ public class Coloring
 
     public bool ColorField(int index)
     {
-        if (!this.fields[index].Item1.GetColored() && this.fields[index].Item1.GetColorCode() == colors[currentSelectedColorIndex].Item1)
+        if (!this.fields[index].Item1.GetColored() && this.fields[index].Item1.GetColorCode() == this.colors[currentSelectedColorIndex].Item1)
         {
-            this.fields[index].Item1.SetColored(true);
+            this.fields[index].Item1.SetColored();
             return true;
         }
         else
