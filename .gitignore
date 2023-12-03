@@ -23,6 +23,8 @@
 # https://github-wiki-see.page/m/interaction-lab/MoveToCode/wiki/Firebase-Setup
 /[Aa]ssets/Data*
 /[Aa]ssets/Firebase*
+/[Aa]ssets/Plugins*
+/[Aa]ssets/TextMesh*
 
 # Visual Studio cache directory
 .vs/

@@ -2,16 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class InputPanelScript : MonoBehaviour
 {
     public TravelGameLogic GameLogic;
     public GameObject DispText;
+
+    public int gameState = 0;
+    public int currentPoint = 0;
+
     public void NumberIn(GameObject numButton)
     {
         Debug.Log(numButton.name);
-        if (DispText.GetComponent<TextMeshProUGUI>().text.Length < 5)
+        if ((DispText.GetComponent<TextMeshProUGUI>().text.Length < 5)&& gameState == 0)
         {
             DispText.GetComponent<TextMeshProUGUI>().text += numButton.GetComponentInChildren<TextMeshProUGUI>().text;
         }
@@ -19,21 +24,26 @@ public class InputPanelScript : MonoBehaviour
 
     public void DeleteNumber()
     {
-        string TMP = DispText.GetComponent<TextMeshProUGUI>().text;
-        if (TMP != "")
+        string temp = DispText.GetComponent<TextMeshProUGUI>().text;
+        if (temp != "")
         {
-            DispText.GetComponent<TextMeshProUGUI>().text = TMP.Remove(TMP.Length - 1, 1);
+            DispText.GetComponent<TextMeshProUGUI>().text = temp.Remove(temp.Length - 1, 1);
         }
     }
 
     public void CheckNumber()
     {
-        string TMP = DispText.GetComponent<TextMeshProUGUI>().text;
-        if (TMP !=  "")
+        string temp = DispText.GetComponent<TextMeshProUGUI>().text;
+        if (temp !=  "")
         {
             int number = System.Int32.Parse(DispText.GetComponent<TextMeshProUGUI>().text);
             GameLogic.NumberEntered(number);
             DispText.GetComponent<TextMeshProUGUI>().text = "";
+            if (true)
+            {
+                gameState = 1;
+                currentPoint += 1;
+            }
         }
         
     }
@@ -44,8 +54,8 @@ public class InputPanelScript : MonoBehaviour
         for (int i = 0; i<InputButtons.Length; i++)
         {
             Debug.Log(InputButtons[i].name);
-            GameObject TMP = InputButtons[i];
-            InputButtons[i].GetComponent<Button>().onClick.AddListener(delegate { NumberIn(TMP); });
+            GameObject temp = InputButtons[i];
+            InputButtons[i].GetComponent<Button>().onClick.AddListener(delegate { NumberIn(temp); });
         }
     }
 
