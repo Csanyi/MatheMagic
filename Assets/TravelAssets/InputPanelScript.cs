@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,14 +10,18 @@ public class InputPanelScript : MonoBehaviour
 {
     public TravelGameLogic GameLogic;
     public GameObject DispText;
+    public GameObject DispExercise;
 
-    public int gameState = 0;
-    public int currentPoint = 0;
+    public bool boatIsMoving = false;
+    public Travel travelLevel;
+    //ezt még valahonnan meg kell kapnom (és a hosszt is)
+    private Grade grade = Grade.FIRST;
 
     public void NumberIn(GameObject numButton)
     {
         Debug.Log(numButton.name);
-        if ((DispText.GetComponent<TextMeshProUGUI>().text.Length < 5)&& gameState == 0)
+        //Mi legyen a beviteli érték felso korlat?
+        if ((DispText.GetComponent<TextMeshProUGUI>().text.Length < 5)&& !boatIsMoving)
         {
             DispText.GetComponent<TextMeshProUGUI>().text += numButton.GetComponentInChildren<TextMeshProUGUI>().text;
         }
@@ -37,12 +42,10 @@ public class InputPanelScript : MonoBehaviour
         if (temp !=  "")
         {
             int number = System.Int32.Parse(DispText.GetComponent<TextMeshProUGUI>().text);
-            GameLogic.NumberEntered(number);
             DispText.GetComponent<TextMeshProUGUI>().text = "";
-            if (true)
+            if (travelLevel.InputResult(number))
             {
-                gameState = 1;
-                currentPoint += 1;
+                boatIsMoving = true;
             }
         }
         
@@ -50,6 +53,8 @@ public class InputPanelScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Beégetett úthossz!
+        travelLevel = new Travel(4, grade);
         GameObject[] InputButtons = GameObject.FindGameObjectsWithTag("NumberButton");
         for (int i = 0; i<InputButtons.Length; i++)
         {
@@ -57,6 +62,7 @@ public class InputPanelScript : MonoBehaviour
             GameObject temp = InputButtons[i];
             InputButtons[i].GetComponent<Button>().onClick.AddListener(delegate { NumberIn(temp); });
         }
+        DispExercise.GetComponent<TextMeshProUGUI>().text = travelLevel.GetCurrentExercise().ExerciseStringWithoutResult();
     }
 
     // Update is called once per frame

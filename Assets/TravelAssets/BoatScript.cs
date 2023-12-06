@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -9,12 +10,13 @@ public class BoatScript : MonoBehaviour
     public float movementSpeed = 2f;
     public GameObject BoatPath;
     private Transform[] ControlPoints;
-    private int cpNum;
+    //beegetett ertek
+    private int cpNum = 4;
 
     // Start is called before the first frame update
     void Start()
     {
-        cpNum = BoatPath.transform.childCount;
+        //Egyelore fix 4 kontrolponttal dolgozom, ezt meg lehet fordítani és az uthosszbol legenerálni a kontrollpontokat
         ControlPoints = new Transform[cpNum];
         for (int i = 0; i<cpNum; i++)
         {
@@ -30,18 +32,15 @@ public class BoatScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        if (panelScript.gameState == 1)
+        if (panelScript.boatIsMoving)
         {
-            int pointInd = 0;
-            if (panelScript.currentPoint < cpNum)
-            {
-                pointInd = panelScript.currentPoint;
-            }
-            Vector3 goalPosition = ControlPoints[pointInd].position;
+            Vector3 goalPosition = ControlPoints[panelScript.travelLevel.GetCurrentPositionOnPath()].position;
             transform.position = Vector3.MoveTowards(transform.position, goalPosition, movementSpeed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, goalPosition) <=0)
+            //a befejezés még nincs megoldva
+            if (Vector3.Distance(transform.position, goalPosition) <=0.01 && !panelScript.travelLevel.IsFinished())
             {
-                panelScript.gameState = 0;
+                panelScript.boatIsMoving = false;
+                panelScript.DispExercise.GetComponent<TextMeshProUGUI>().text = panelScript.travelLevel.GetCurrentExercise().ExerciseStringWithoutResult();
             }
         }   
     }
