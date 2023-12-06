@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 4471562549257886807}
   - component: {fileID: 7940786714112024378}
   m_Layer: 5
-  m_Name: Down
+  m_Name: DownButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -305,7 +305,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -81.2}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 140, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2622826295251511903
 CanvasRenderer:
@@ -402,7 +402,7 @@ GameObject:
   - component: {fileID: 4806401592992102939}
   - component: {fileID: 2421109301992669058}
   m_Layer: 5
-  m_Name: Up
+  m_Name: UpButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,7 +426,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 83.9}
-  m_SizeDelta: {x: 150, y: 25}
+  m_SizeDelta: {x: 140, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &519327098586032300
 CanvasRenderer:
@@ -560,7 +560,7 @@ GameObject:
   - component: {fileID: 2950423648518399361}
   - component: {fileID: 1294130620913267542}
   m_Layer: 5
-  m_Name: Main
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
