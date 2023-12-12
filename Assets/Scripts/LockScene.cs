@@ -3,6 +3,7 @@ using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LockScene : MonoBehaviour
@@ -14,6 +15,8 @@ public class LockScene : MonoBehaviour
 
 	[SerializeField] private Sprite plusSignSprite;
 	[SerializeField] private Sprite minusSignSprite;
+
+	[SerializeField] private GameObject clearLevelPopup;
 
 	private int tileSize;
 	private int lockDigitCnt;
@@ -28,7 +31,8 @@ public class LockScene : MonoBehaviour
 		if (user is not null)
 		{
 			DrawTiles(user.Class);
-		} else
+		} 
+		else
 		{
 			Debug.LogWarning("User is null.");
 			// some kind of error popup
@@ -38,6 +42,8 @@ public class LockScene : MonoBehaviour
 
 	private void DrawTiles(int grade)
 	{
+		canvas.sortingOrder -= 1;
+
 		tileSize = (int)tilePrefab.GetComponent<RectTransform>().sizeDelta.x;
 		lockGame = new Lock((grade == 4) ? 3 : grade);
 		lockDigitCnt = lockGame.GetDigitCnt(lockGame.GetExercise().GetResult());
@@ -105,7 +111,7 @@ public class LockScene : MonoBehaviour
 		}
 	}
 
-	private void ResultButtonOnClick(TextMeshProUGUI text, int index, bool up)
+	private async void ResultButtonOnClick(TextMeshProUGUI text, int index, bool up)
 	{
 		lockGame.RotateDigit(index, up);
 		text.text = lockGame.GetLockDigit(index).ToString();
@@ -113,7 +119,10 @@ public class LockScene : MonoBehaviour
 		if (lockGame.IsFinished())
 		{
 			DisableButtons();
-			Debug.Log("FINISHED!");
+			ClearLevelScript script = clearLevelPopup.GetComponentInChildren<ClearLevelScript>();
+			script.ScenetToLoad = 4;
+			clearLevelPopup.SetActive(true);
+			await script.TaskCompleted();
 		}
 	}
 
