@@ -1,13 +1,13 @@
 using Assets.Scripts.Persistence;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class ProfilScene : MonoBehaviour
+public class ProfileScene : MonoBehaviour
 {
 	[SerializeField] Button rightButton;
 	[SerializeField] Button leftButton;
-	[SerializeField] Button settingsButton;
 	[SerializeField] Button homeButton;
 	[SerializeField] Button saveButton;
 	[SerializeField] Image avatarImage;
@@ -15,19 +15,17 @@ public class ProfilScene : MonoBehaviour
 	[SerializeField] Sprite maleSpirte;
 	[SerializeField] Sprite femaleSprite;
 	[SerializeField] GameObject inputErrorText;
+	[SerializeField] Canvas canvas;
 
 	private Database db;
 	private User user;
 
 	private async void Start()
 	{
+		canvas.sortingOrder -= 1;
+
 		db = new Database();
-
 		user = await db.GetUserAsync();
-
-		var x = await db.GetClassMapsAsync(3);
-
-		var y  = await db.GetPathsAsync(x[0].Id);
 
 		if (user is not null)
 		{
@@ -47,7 +45,6 @@ public class ProfilScene : MonoBehaviour
 
 		nameField.onDeselect.AddListener((name) => ValidateInput(name));
 
-		settingsButton.onClick.AddListener(SettingsButtonClick);
 		homeButton.onClick.AddListener(HomeButtonClick);
 		saveButton.onClick.AddListener(SaveButtonClick);
 		rightButton.onClick.AddListener(ArrowClick);
@@ -87,13 +84,8 @@ public class ProfilScene : MonoBehaviour
 		await db.UpdateUserAsync(user);
 	}
 
-	private void SettingsButtonClick()
-	{
-		Debug.Log("Settings button click");
-	}
-
 	private void HomeButtonClick()
 	{
-		Debug.Log("Home button click");
+		SceneManager.LoadScene(0);
 	}
 }
