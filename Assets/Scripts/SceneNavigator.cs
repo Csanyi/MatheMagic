@@ -41,6 +41,7 @@ public class SceneNavigator : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+
     public void SwitchToOperationMap()
     {
         SceneManager.LoadScene(2);

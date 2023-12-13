@@ -82,8 +82,34 @@ public class GameHelper
 
     public static Exercise GenerateRandomExercise(Operation operation, int digits)
     {
-        // TODO
-        return new Exercise(1, 2, 3, operation);
+        int max = (int)Math.Pow(10, digits);
+
+        int x = random.Next(1, max);
+        int y = 0;
+        int z = 0;
+
+        switch (operation)
+        {
+            case Operation.ADDITION:
+                y = random.Next(1, max);
+                z = x + y;
+                break;
+			case Operation.SUBTRACTION:
+				y = random.Next(1, x);
+				z = x - y;
+				break;
+			case Operation.MULTIPLICATION:
+				y = random.Next(0, max);
+				z = x * y;
+				break;
+            case Operation.DIVISION:
+                y = x % (max/10);
+                x = y * random.Next(1, 11);
+                z = x / y;
+                break;
+		}
+
+        return new Exercise(x, y, z, operation);
     }
 
     public static Exercise GenerateRandomExercise(Grade grade)
