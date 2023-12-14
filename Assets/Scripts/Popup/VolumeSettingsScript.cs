@@ -5,7 +5,7 @@ public class VolumeSettingsScript : MonoBehaviour
 {
 	[SerializeField] private Slider volumeSlider;
 
-	void Start()
+	private void Awake()
     {
 		if (!PlayerPrefs.HasKey("volume"))
 		{
