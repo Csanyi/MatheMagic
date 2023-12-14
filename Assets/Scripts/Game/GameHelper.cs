@@ -70,6 +70,11 @@ public class GameHelper
 {
     private static Random random = new Random();
 
+    public static int GenerateRandomNumber()
+    {
+        return random.Next();
+    }
+
     public static int GenerateRandomNumberInclusive(int min, int max)
     {
         return random.Next(min, max + 1);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Tile
 {
@@ -24,8 +25,7 @@ public class Tile
         (int, int)
             start = (0, 0),
             finish = (height - 1, width - 1);
-        List<List<(int, int)>> possiblePaths = GraphPaths.CalculatePaths(this.height, this.width, start, finish, height + width, height * width / 2);
-        this.path = possiblePaths[GameHelper.GenerateRandomNumberInclusive(0, possiblePaths.Count - 1)]; // TODO: optimize length
+        this.path = GraphPaths.CalculateOnePath(this.height, this.width, start, finish, height + width, height * width / 2);
         this.currentPositionOnPath = 0;
 
         this.rulesAreExercises = (grade == Grade.FIRST) ? true : rulesAreExercises; // No division rule for first graders
@@ -36,10 +36,10 @@ public class Tile
         }
         else
         {
-            this.divisionRule = GameHelper.GenerateRandomNumberInclusive(2, 9); // TODO: configure numbers
+            this.divisionRule = GameHelper.GenerateRandomNumberInclusive(2, 9);
             for (int i = 0; i < path.Count; i++)
             {
-                tiles[path[i].Item1][path[i].Item2] = divisionRule * GameHelper.GenerateRandomNumberInclusive(1, 9); // TODO: configure numbers
+                tiles[path[i].Item1][path[i].Item2] = divisionRule * GameHelper.GenerateRandomNumberInclusive(1, 9);
             }
         }
 
@@ -90,26 +90,27 @@ public class Tile
 
 public class GraphPaths
 {
-    public static List<List<(int, int)>> CalculatePaths(int height, int width, (int, int) start, (int, int) finish, int minLength, int maxLength)
+    public static List<(int, int)> CalculateOnePath(int height, int width, (int, int) start, (int, int) finish, int minLength, int maxLength)
     {
         List<List<(int, int)>> paths = new List<List<(int, int)>>();
         List<(int, int)> currentPath = new List<(int, int)>();
 
-        DFS(start, finish, height, width, currentPath, paths);
+        GenerateOnePath(start, finish, height, width, currentPath, paths, minLength, maxLength);
 
-        return FilterPathsByLength(paths, minLength, maxLength);
+        return paths[0];
     }
 
-    static void DFS((int, int) current, (int, int) finish, int height, int width, List<(int, int)> currentPath, List<List<(int, int)>> paths)
+    static void GenerateOnePath((int, int) current, (int, int) finish, int height, int width, List<(int, int)> currentPath, List<List<(int, int)>> paths, int minLength, int maxLength)
     {
-        if (IsOutsideGraph(current, height, width) || IsAdjacentToThreeOrMoreStepsBack(current, currentPath))
+
+        if (IsOutsideGraph(current, height, width) || IsAdjacentToThreeOrMoreStepsBack(current, currentPath) || currentPath.Contains(current) || currentPath.Count > maxLength || paths.Count > 0)
         {
             return;
         }
 
         currentPath.Add(current);
 
-        if (current.Item1 == finish.Item1 && current.Item2 == finish.Item2)
+        if (current.Item1 == finish.Item1 && current.Item2 == finish.Item2 && currentPath.Count >= minLength)
         {
             paths.Add(new List<(int, int)>(currentPath));
         }
@@ -118,26 +119,11 @@ public class GraphPaths
             List<(int, int)> possibleAdjacent = GeneratePossibleAdjacent(current);
             foreach ((int, int) position in possibleAdjacent)
             {
-                DFS(position, finish, height, width, currentPath, paths);
+                GenerateOnePath(position, finish, height, width, currentPath, paths, minLength, maxLength);
             }
         }
 
         currentPath.RemoveAt(currentPath.Count - 1);
-    }
-
-    static List<List<(int, int)>> FilterPathsByLength(List<List<(int, int)>> paths, int minLength, int maxLength)
-    {
-        List<List<(int, int)>> filteredPaths = new List<List<(int, int)>>();
-
-        foreach (var path in paths)
-        {
-            if (path.Count >= minLength && path.Count <= maxLength)
-            {
-                filteredPaths.Add(new List<(int, int)>(path));
-            }
-        }
-
-        return filteredPaths;
     }
 
     static bool IsAdjacentToThreeOrMoreStepsBack((int, int) current, List<(int, int)> currentPath)
@@ -147,7 +133,7 @@ public class GraphPaths
             return false;
         }
 
-        for (int i = 0; i < currentPath.Count - 3; i++)
+        for (int i = 0; i < currentPath.Count - 2; i++)
         {
             var position = currentPath[i];
 
@@ -167,13 +153,14 @@ public class GraphPaths
 
     static List<(int, int)> GeneratePossibleAdjacent((int, int) position)
     {
-        return new List<(int, int)>()
+        var possibleAdjacent = new List<(int, int)>()
         {
             (position.Item1 + 1, position.Item2),
             (position.Item1 - 1, position.Item2),
             (position.Item1, position.Item2 + 1),
             (position.Item1, position.Item2 - 1)
         };
+        return possibleAdjacent.OrderBy(a => GameHelper.GenerateRandomNumber()).ToList();
     }
 
     static bool IsAdjacent((int, int) position1, (int, int) position2)
