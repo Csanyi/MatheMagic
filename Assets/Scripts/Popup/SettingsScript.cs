@@ -16,7 +16,7 @@ public class SettingsScript : MonoBehaviour
 	private User user;
 	private int grade;
 
-	private async void Start()
+	private async void Awake()
 	{
 		db = new Database();
 		user = await db.GetUserAsync();
@@ -38,15 +38,15 @@ public class SettingsScript : MonoBehaviour
 
 	private async void SaveButtonClick()
 	{
+		settingsPopup.SetActive(false);
 		user.Class = grade;
 		await db.UpdateUserAsync(user);
-		settingsPopup.SetActive(false);
 	}
 
 	private void CloseButtonClick()
 	{
-		grade = user.Class;
 		settingsPopup.SetActive(false);
+		grade = user.Class;
 		gradeText.text = $"{grade}. osztály";
 	}
 }

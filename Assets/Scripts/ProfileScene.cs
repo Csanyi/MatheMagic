@@ -20,7 +20,7 @@ public class ProfileScene : MonoBehaviour
 	private Database db;
 	private User user;
 
-	private async void Start()
+	private async void Awake()
 	{
 		canvas.sortingOrder -= 1;
 

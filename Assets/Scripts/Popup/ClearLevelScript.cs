@@ -19,7 +19,7 @@ public class ClearLevelScript : MonoBehaviour
     private User user;
     
 
-    private void Start()
+    private void Awake()
     {
         homeButton.onClick.AddListener(() => SceneManager.LoadScene(2));
         nextButton.onClick.AddListener(() => SceneManager.LoadScene(ScenetToLoad));

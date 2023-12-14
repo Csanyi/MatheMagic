@@ -22,7 +22,7 @@ public class LockScene : MonoBehaviour
 	private int lockDigitCnt;
 	private Lock lockGame;
 
-	private async void Start()
+	private async void Awake()
 	{
 		Database db = new Database();
 
