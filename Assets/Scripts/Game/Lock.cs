@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public class Lock
 {
@@ -10,7 +11,7 @@ public class Lock
         this.exercise = GameHelper.GenerateRandomExercise(
             GameHelper.GenerateRandomBool() ? Operation.ADDITION : Operation.SUBTRACTION,
             digits);
-        this.lockDigits = new int[digits];
+        this.lockDigits = new int[GetDigitCnt(this.exercise.GetResult())];
     }
 
     public Exercise GetExercise()
@@ -58,4 +59,33 @@ public class Lock
     {
         return this.GetCurrentResult() == this.exercise.GetResult();
     }
+
+	public IEnumerable<int> GetDigits(int n)
+	{
+		if (n == 0)
+		{
+			yield return 0;
+			yield break;
+		}
+
+		while (n != 0)
+		{
+			yield return n % 10;
+			n /= 10;
+		}
+	}
+
+	public int GetDigitCnt(int n)
+	{
+		int cnt = 1;
+		n /= 10;
+
+		while (n != 0)
+		{
+			++cnt;
+			n /= 10;
+		}
+
+		return cnt;
+	}
 }
