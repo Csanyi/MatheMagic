@@ -59,7 +59,7 @@ public class Coloring
 
         foreach (var item in colorCodeList)
         {
-            this.fields.Add((new ColorField(item), GameHelper.GenerateRandomExercise(grade))); // TODO: generate exercise based on result
+            this.fields.Add((new ColorField(item), GameHelper.GenerateRandomExerciseForGrade(grade))); // TODO: generate exercise based on result
         }
 
         this.currentSelectedColorIndex = 0;

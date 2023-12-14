@@ -80,21 +80,92 @@ public class GameHelper
         return random.Next(2) % 2 == 0;
     }
 
-    public static Exercise GenerateRandomExercise(Operation operation, int digits)
+    public static Operation GenerateRandomOperation()
     {
-        // TODO
-        return new Exercise(1, 2, 3, operation);
+        int rnd = random.Next(4);
+        switch (rnd)
+        {
+            case 0:
+                return Operation.ADDITION;
+            case 1:
+                return Operation.SUBTRACTION;
+            case 2:
+                return Operation.MULTIPLICATION;
+            default:
+                return Operation.DIVISION;
+        }
+    }
+    public static Operation GenerateRandomOperationAddSub()
+    {
+        return GenerateRandomBool() ? Operation.ADDITION : Operation.SUBTRACTION;
     }
 
-    public static Exercise GenerateRandomExercise(Grade grade)
+    // `min` and `max` are not applicable to all numbers in an operation and they only bound the following numbers:
+    // ADDITION: result (sum)
+    // SUBTRACTION: 1st operand
+    // MULTIPLICATION: result (product)
+    // DIVISION: 1st operand
+    public static Exercise GenerateRandomExerciseForOperation(Operation operation, int min, int max)
     {
-        // TODO
-        return new Exercise(1, 2, 3, Operation.ADDITION);
+        int sum, diff, prod, quot, oper1, oper2;
+        switch (operation)
+        {
+            case Operation.ADDITION:
+                sum = GenerateRandomNumberInclusive(min, max);
+                oper1 = GenerateRandomNumberInclusive(1, sum - 1);
+                oper2 = sum - oper1;
+                return new Exercise(oper1, oper2, sum, operation);
+            case Operation.SUBTRACTION:
+                oper1 = GenerateRandomNumberInclusive(min, max);
+                oper2 = GenerateRandomNumberInclusive(1, oper1 - 1);
+                diff = oper1 - oper2;
+                return new Exercise(oper1, oper2, diff, operation);
+            case Operation.MULTIPLICATION:
+                prod = GenerateRandomNumberInclusive(min, max);
+                oper1 = GenerateRandomNumberInclusive(1, prod / 2);
+                oper2 = prod / oper1;
+                prod = oper1 * oper2;
+                return new Exercise(oper1, oper2, prod, operation);
+            default: // Operation.DIVISION
+                oper1 = GenerateRandomNumberInclusive(min, max);
+                oper2 = GenerateRandomNumberInclusive(1, oper1 / 2);
+                quot = oper1 / oper2;
+                oper1 = oper2 * quot;
+                return new Exercise(oper1, oper2, quot, operation);
+        }
     }
 
-    public static Exercise GenerateRandomExercise(Grade grade, int digits)
+    public static Exercise GenerateRandomExerciseForOperationAndDigits(Operation operation, int digits)
     {
-        // TODO
-        return new Exercise(1, 2, 3, Operation.ADDITION);
+        return GenerateRandomExerciseForOperation(operation, 10 ^ (digits - 1), 10 ^ digits - 1);
+    }
+
+    public static Exercise GenerateRandomExerciseForGrade(Grade grade)
+    {
+        Operation operation =
+            (grade == Grade.FIRST) ?
+            GenerateRandomOperationAddSub() :
+            GenerateRandomOperation();
+        switch (grade)
+        {
+            case Grade.FIRST:
+                return GenerateRandomExerciseForOperation(operation, 1, 20);
+            case Grade.SECOND:
+                return GenerateRandomExerciseForOperation(operation, 10, 99);
+            case Grade.THIRD:
+                return GenerateRandomExerciseForOperation(operation, 100, 999);
+            default: // Grade.FOURTH
+                return GenerateRandomExerciseForOperation(operation, 1000, 9999);
+        }
+    }
+
+    public static Exercise GenerateRandomExerciseForGradeAndDigits(Grade grade, int digits)
+    {
+        Operation operation =
+            (grade == Grade.FIRST) ?
+            GenerateRandomOperationAddSub() :
+            GenerateRandomOperation();
+        return GenerateRandomExerciseForOperationAndDigits(operation, digits);
+        // TODO: Intersect with boundaries in GenerateRandomExerciseForGrade(). Example: FIRST grade, 3 digits -> still [1, 20] interval
     }
 }

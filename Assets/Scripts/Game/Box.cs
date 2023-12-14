@@ -56,7 +56,7 @@ public class Box
             int allElements = 0;
             for (int i = 0; i < numberOfContainers; i++)
             {
-                Exercise exercise = GameHelper.GenerateRandomExercise(grade, 1);
+                Exercise exercise = GameHelper.GenerateRandomExerciseForGradeAndDigits(grade, 1);
                 allElements += exercise.GetResult();
                 this.containers.Add(new Container(exercise.GetResult()));
                 this.containerLabels.Add(exercise);
