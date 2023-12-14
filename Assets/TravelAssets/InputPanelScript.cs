@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Persistence;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -51,9 +52,12 @@ public class InputPanelScript : MonoBehaviour
         
     }
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
         //Beégetett úthossz!
+        var Db = new Database();
+        await Db.CreateUserAsync(new User {Name = "Piroska", Class = 1, Character = Characters.Female});
+        User piros = await Db.GetUserAsync();
         travelLevel = new Travel(4, grade);
         GameObject[] InputButtons = GameObject.FindGameObjectsWithTag("NumberButton");
         for (int i = 0; i<InputButtons.Length; i++)
