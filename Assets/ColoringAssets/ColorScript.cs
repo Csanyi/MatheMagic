@@ -17,8 +17,9 @@ public class ColorScript : MonoBehaviour
     private GameObject selectedFragment;
     private Button[] paints;
     private int selectedFragmentInd;
-    private float width;
-    private float height;
+    private bool finishCalled = false;
+
+    [SerializeField] private GameObject clearLevelPopup;
 
     private Color lightBlue = new Color(0.5f, 0.5f, 1f);
     private Dictionary<ColorCode, Color> colorCode2Color = new Dictionary<ColorCode, Color>(){
@@ -34,14 +35,22 @@ public class ColorScript : MonoBehaviour
         {ColorCode.BROWN, new Color(0.75f, 0.65f, 0.5f)}};
     // Start is called before the first frame update
 
-    public void PaletteOnClick(Button PaintButton)
+    async public void PaletteOnClick(Button PaintButton)
     {
         int colInd = System.Array.IndexOf(paints, PaintButton);
-        if ( selectedFragment.GetComponent<FragScript>().color == PaintButton.GetComponent<FragScript>().color)
+        if (selectedFragment != null && selectedFragment.GetComponent<FragScript>().color == PaintButton.GetComponent<FragScript>().color)
         {
             ColoringLevel.SelectColor(colInd);
             ColoringLevel.ColorField(selectedFragmentInd);
             selectedFragment.GetComponent<SpriteRenderer>().color = colorCode2Color[selectedFragment.GetComponent<FragScript>().color];
+        }
+        if (!finishCalled && ColoringLevel.IsFinished())
+        {
+            finishCalled = true;
+            ClearLevelScript script = clearLevelPopup.GetComponentInChildren<ClearLevelScript>();
+            script.ScenetToLoad = 5;
+            clearLevelPopup.SetActive(true);
+            await script.TaskCompleted();
         }
     }
 

@@ -58,7 +58,7 @@ public class InputPanelScript : MonoBehaviour
         var Db = new Database();
         await Db.CreateUserAsync(new User {Name = "Piroska", Class = 1, Character = Characters.Female});
         User piros = await Db.GetUserAsync();
-        travelLevel = new Travel(4, grade);
+        travelLevel = new Travel(8, grade);
         GameObject[] InputButtons = GameObject.FindGameObjectsWithTag("NumberButton");
         for (int i = 0; i<InputButtons.Length; i++)
         {
