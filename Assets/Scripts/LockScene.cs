@@ -3,7 +3,6 @@ using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LockScene : MonoBehaviour
@@ -120,7 +119,7 @@ public class LockScene : MonoBehaviour
 		{
 			DisableButtons();
 			ClearLevelScript script = clearLevelPopup.GetComponentInChildren<ClearLevelScript>();
-			script.ScenetToLoad = 4;
+			script.SceneToLoad = 5;
 			clearLevelPopup.SetActive(true);
 			await script.TaskCompleted();
 		}

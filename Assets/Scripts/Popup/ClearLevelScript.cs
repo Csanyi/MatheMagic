@@ -13,7 +13,7 @@ public class ClearLevelScript : MonoBehaviour
     [SerializeField] private TextMeshProUGUI xpText;
     [SerializeField] private Slider xpSlider;
 
-    public int ScenetToLoad { get; set; }
+    public int SceneToLoad { get; set; }
 
     private Database db;
     private User user;
@@ -21,8 +21,8 @@ public class ClearLevelScript : MonoBehaviour
 
     private void Awake()
     {
-        homeButton.onClick.AddListener(() => SceneManager.LoadScene(2));
-        nextButton.onClick.AddListener(() => SceneManager.LoadScene(ScenetToLoad));
+        homeButton.onClick.AddListener(() => SceneManager.LoadScene(4));
+        nextButton.onClick.AddListener(() => SceneManager.LoadScene(SceneToLoad));
     }
 
 	public async Task TaskCompleted()

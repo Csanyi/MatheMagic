@@ -34,22 +34,22 @@ public class SceneNavigator : MonoBehaviour
 
     public void SwitchToMainMap()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(2);
     }
 
     public void SwitchToProfile()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(3);
     }
 
     public void SwitchToOperationMap()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(4);
     }
 
     public void SwitchToGame()
     {
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(6);
     }
 
     public void QuitGame()

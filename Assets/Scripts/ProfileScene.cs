@@ -6,16 +6,16 @@ using UnityEngine.UI;
 
 public class ProfileScene : MonoBehaviour
 {
-	[SerializeField] Button rightButton;
-	[SerializeField] Button leftButton;
-	[SerializeField] Button homeButton;
-	[SerializeField] Button saveButton;
-	[SerializeField] Image avatarImage;
-	[SerializeField] TMP_InputField nameField;
-	[SerializeField] Sprite maleSpirte;
-	[SerializeField] Sprite femaleSprite;
-	[SerializeField] GameObject inputErrorText;
-	[SerializeField] Canvas canvas;
+	[SerializeField] private Button rightButton;
+	[SerializeField] private Button leftButton;
+	[SerializeField] private Button homeButton;
+	[SerializeField] private Button saveButton;
+	[SerializeField] private Image avatarImage;
+	[SerializeField] private TMP_InputField nameField;
+	[SerializeField] private Sprite maleSpirte;
+	[SerializeField] private Sprite femaleSprite;
+	[SerializeField] private GameObject inputErrorText;
+	[SerializeField] private Canvas canvas;
 
 	private Database db;
 	private User user;
@@ -86,6 +86,6 @@ public class ProfileScene : MonoBehaviour
 
 	private void HomeButtonClick()
 	{
-		SceneManager.LoadScene(0);
+		SceneManager.LoadScene(2);
 	}
 }

@@ -11,8 +11,8 @@ public class OperationMapScene : MapSceneBase
     protected override void Awake()
     {
         base.Awake();
-		homeButton.onClick.AddListener(() => SceneManager.LoadScene(0));
-		sampleGameButton.onClick.AddListener(() => SceneManager.LoadScene(3));
-		lockGameButton.onClick.AddListener(() => SceneManager.LoadScene(4));
+		homeButton.onClick.AddListener(() => SceneManager.LoadScene(2));
+		sampleGameButton.onClick.AddListener(() => SceneManager.LoadScene(6));
+		lockGameButton.onClick.AddListener(() => SceneManager.LoadScene(5));
 	}
 }

@@ -11,7 +11,7 @@ public class PauseScript : MonoBehaviour
 
     private void Awake()
     {
-        homeButton.onClick.AddListener(() => SceneManager.LoadScene(2));
+        homeButton.onClick.AddListener(() => SceneManager.LoadScene(4));
 		resumeButton.onClick.AddListener(() => PausePopup.SetActive(false));
 		pauseButton.onClick.AddListener(() => PausePopup.SetActive(true));
 	}
