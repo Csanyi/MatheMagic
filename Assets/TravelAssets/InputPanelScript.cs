@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -15,8 +16,9 @@ public class InputPanelScript : MonoBehaviour
 
     public bool boatIsMoving = false;
     public Travel travelLevel;
-    //ezt még valahonnan meg kell kapnom (és a hosszt is)
-    private Grade grade = Grade.FIRST;
+
+    [SerializeField] private Canvas canvas;
+    private Grade grade;
 
     public void NumberIn(GameObject numButton)
     {
@@ -56,17 +58,29 @@ public class InputPanelScript : MonoBehaviour
     {
         //Beégetett úthossz!
         var Db = new Database();
-        await Db.CreateUserAsync(new User {Name = "Piroska", Class = 1, Character = Characters.Female});
-        User piros = await Db.GetUserAsync();
-        travelLevel = new Travel(4, grade);
-        GameObject[] InputButtons = GameObject.FindGameObjectsWithTag("NumberButton");
-        for (int i = 0; i<InputButtons.Length; i++)
+        User user = await Db.GetUserAsync();
+
+        canvas.sortingOrder -= 1;
+
+        if (user is not null)
         {
-            Debug.Log(InputButtons[i].name);
-            GameObject temp = InputButtons[i];
-            InputButtons[i].GetComponent<Button>().onClick.AddListener(delegate { NumberIn(temp); });
+            grade = (Grade)(user.Class-1);
+            travelLevel = new Travel(8, grade);
+            GameObject[] InputButtons = GameObject.FindGameObjectsWithTag("NumberButton");
+            for (int i = 0; i<InputButtons.Length; i++)
+            {
+                Debug.Log(InputButtons[i].name);
+                GameObject temp = InputButtons[i];
+                InputButtons[i].GetComponent<Button>().onClick.AddListener(delegate { NumberIn(temp); });
+            }
+            DispExercise.GetComponent<TextMeshProUGUI>().text = travelLevel.GetCurrentExercise().ExerciseStringWithoutResult();
         }
-        DispExercise.GetComponent<TextMeshProUGUI>().text = travelLevel.GetCurrentExercise().ExerciseStringWithoutResult();
+        else
+        {
+            Debug.LogWarning("User is null.");
+            // some kind of error popup
+        }
+
     }
 
     // Update is called once per frame

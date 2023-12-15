@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Scripts.Persistence;
 
 public class MapGeneratorScript : MonoBehaviour
 {
@@ -16,44 +17,89 @@ public class MapGeneratorScript : MonoBehaviour
     public GameObject tilePrefab;
     public Canvas mainCanvas;
     public TileGameLogicScript gameLogic;
+    public GameObject DispExercise;
 
     public Sprite wrongAsnwerSprite;
     public Sprite correctAsnwerSprite;
+    private Grade grade;
+    private Tile TileLevel;
+
+    [SerializeField] private GameObject clearLevelPopup;
+
+    [SerializeField] private Canvas canvas;
 
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
-        Vector3 offset = new Vector3(-400, -300, 0);
+        var db = new Database();
+        User user = await db.GetUserAsync();
 
-        for (int i = 0; i < rows; i++)
+        canvas.sortingOrder -= 1;
+
+        if (user  is not null)
         {
-            for(int j = 0; j < cols; j++)
+            grade = (Grade)(user.Class - 1);
+            TileLevel = new Tile(rows, cols, true, grade);
+            Vector3 offset = new Vector3(-400, -300, 0);
+            for (int i = 0; i < rows; i++)
             {
-                int x = i;
-                int y = j;
-                GameObject newTile = Instantiate(tilePrefab);
-                newTile.transform.SetParent(mainCanvas.transform, false);
-                newTile.GetComponent<RectTransform>().localPosition = new Vector3(j * spriteWidth, i * spriteHeight, 0) + offset;
-                newTile.name = "Tile_" + x.ToString() + y.ToString();
-                newTile.GetComponent<Button>().onClick.AddListener(delegate { tileOnClick(newTile, x, y); } );
-                newTile.GetComponentInChildren<TextMeshProUGUI>().text = gameLogic.GetTileNumber(x, y).ToString();
+                for(int j = 0; j < cols; j++)
+                {
+                    int x = i;
+                    int y = j;
+                    GameObject newTile = Instantiate(tilePrefab);
+                    newTile.transform.SetParent(mainCanvas.transform, false);
+                    newTile.GetComponent<RectTransform>().localPosition = new Vector3(j * spriteWidth, i * spriteHeight, 0) + offset;
+                    newTile.name = "Tile_" + x.ToString() + y.ToString();
+                    newTile.GetComponent<Button>().onClick.AddListener(delegate { tileOnClick(newTile, x, y); } );
+                    newTile.GetComponentInChildren<TextMeshProUGUI>().text = TileLevel.GetNumberOnTile((x, y)).ToString();
+                }
             }
-        }
-    }
+            DispExercise.GetComponentInChildren<TextMeshProUGUI>().text = TileLevel.GetCurrentRule();
+            (int, int) firstTile = TileLevel.GetCurrentTile();
+            GameObject currTile = GameObject.Find("Tile_" + firstTile.Item1.ToString() + firstTile.Item2.ToString());
+            currTile.GetComponent<Image>().sprite = correctAsnwerSprite;
+            currTile.GetComponentInChildren<TextMeshProUGUI>().text = "";
 
-    public void tileOnClick(GameObject tile, int x, int y)
-    {
-        Debug.Log(tile.name + " at " + x.ToString() + ", " + y.ToString() + " was clicked.");
-        bool result = gameLogic.TileClicked(x, y);
-        if (result)
-        {
-            tile.GetComponent<Image>().sprite = correctAsnwerSprite;
         }
         else
         {
-            tile.GetComponent<Image>().sprite = wrongAsnwerSprite;
+            Debug.LogWarning("User is null.");
+            // some kind of error popup
         }
-        tile.GetComponentInChildren<TextMeshProUGUI>().text = "";
+
+
+    }
+
+    async public void tileOnClick(GameObject tile, int x, int y)
+    {
+        Debug.Log(tile.name + " at " + x.ToString() + ", " + y.ToString() + " was clicked.");
+        (int, int) current = TileLevel.GetCurrentTile();
+        int diffx = System.Math.Abs(current.Item1 - x);
+        int diffy = System.Math.Abs(current.Item2 - y);
+        if (((diffx == 0 && diffy == 1) || (diffx == 1 && diffy == 0)) && ! TileLevel.GetTileIsVisited((x, y)))
+        {
+            if (TileLevel.StepOnTile((x, y)))
+            {
+                tile.GetComponent<Image>().sprite = correctAsnwerSprite;
+                if (TileLevel.IsFinished())
+                {
+                    ClearLevelScript script = clearLevelPopup.GetComponentInChildren<ClearLevelScript>();
+                    script.ScenetToLoad = 8;
+                    clearLevelPopup.SetActive(true);
+                    await script.TaskCompleted();
+                }
+                else
+                {
+                    DispExercise.GetComponentInChildren<TextMeshProUGUI>().text = TileLevel.GetCurrentRule();
+                }
+            }
+            else
+            {
+                tile.GetComponent<Image>().sprite = wrongAsnwerSprite;
+            }
+            tile.GetComponentInChildren<TextMeshProUGUI>().text = "";
+        }
     }
 
     // Update is called once per frame

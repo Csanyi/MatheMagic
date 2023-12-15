@@ -10,13 +10,16 @@ public class BoatScript : MonoBehaviour
     public float movementSpeed = 2f;
     public GameObject BoatPath;
     private Transform[] ControlPoints;
+    private bool FinishIsCalled;
     //beegetett ertek
-    private int cpNum = 4;
+    private int cpNum = 8;
+
+    [SerializeField] private GameObject clearLevelPopup;
 
     // Start is called before the first frame update
     void Start()
     {
-        //Egyelore fix 4 kontrolponttal dolgozom, ezt meg lehet fordítani és az uthosszbol legenerálni a kontrollpontokat
+        FinishIsCalled = false;
         ControlPoints = new Transform[cpNum];
         for (int i = 0; i<cpNum; i++)
         {
@@ -30,18 +33,28 @@ public class BoatScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    async void Update()
     {   
         if (panelScript.boatIsMoving)
         {
             Vector3 goalPosition = ControlPoints[panelScript.travelLevel.GetCurrentPositionOnPath()].position;
+            transform.rotation = Quaternion.LookRotation(Vector3.forward, transform.position-goalPosition);
             transform.position = Vector3.MoveTowards(transform.position, goalPosition, movementSpeed * Time.deltaTime);
             //a befejezés még nincs megoldva
-            if (Vector3.Distance(transform.position, goalPosition) <=0.01 && !panelScript.travelLevel.IsFinished())
+            bool arrived = Vector3.Distance(transform.position, goalPosition) <= 0.01;
+            if (arrived && !panelScript.travelLevel.IsFinished())
             {
                 panelScript.boatIsMoving = false;
                 panelScript.DispExercise.GetComponent<TextMeshProUGUI>().text = panelScript.travelLevel.GetCurrentExercise().ExerciseStringWithoutResult();
             }
-        }   
+            else if (arrived && panelScript.travelLevel.IsFinished() && !FinishIsCalled)
+            {
+                FinishIsCalled = true;
+                ClearLevelScript script = clearLevelPopup.GetComponentInChildren<ClearLevelScript>();
+                script.ScenetToLoad = 8;
+                clearLevelPopup.SetActive(true);
+                await script.TaskCompleted();
+            }
+        }
     }
 }

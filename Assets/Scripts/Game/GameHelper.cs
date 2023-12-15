@@ -47,9 +47,9 @@ public class Exercise
             case Operation.SUBTRACTION:
                 return "-";
             case Operation.MULTIPLICATION:
-                return "×";
+                return "x";
             case Operation.DIVISION:
-                return "÷";
+                return "/";
             default:
                 return "";
         }
@@ -62,13 +62,19 @@ public class Exercise
 
     public String ExerciseStringWithoutResult()
     {
-        return this.operand1 + " " + GetOperationSign() + " " + this.operand2 + " = ?";
+        //return this.operand1 + " " + GetOperationSign() + " " + this.operand2 + " = ?";
+        return this.operand1 + " " + GetOperationSign() + " " + this.operand2;
     }
 }
 
 public class GameHelper
 {
     private static Random random = new Random();
+
+    public static int GenerateRandomNumber()
+    {
+        return random.Next();
+    }
 
     public static int GenerateRandomNumberInclusive(int min, int max)
     {
@@ -80,47 +86,100 @@ public class GameHelper
         return random.Next(2) % 2 == 0;
     }
 
-    public static Exercise GenerateRandomExercise(Operation operation, int digits)
+    public static Operation GenerateRandomOperation()
     {
-        int max = (int)Math.Pow(10, digits);
+        int rnd = random.Next(4);
+        switch (rnd)
+        {
+            case 0:
+                return Operation.ADDITION;
+            case 1:
+                return Operation.SUBTRACTION;
+            case 2:
+                return Operation.MULTIPLICATION;
+            default:
+                return Operation.DIVISION;
+        }
+    }
+    public static Operation GenerateRandomOperationAddSub()
+    {
+        return GenerateRandomBool() ? Operation.ADDITION : Operation.SUBTRACTION;
+    }
 
-        int x = random.Next(1, max);
-        int y = 0;
-        int z = 0;
+    // `min` and `max` are not applicable to all numbers in an operation and they only bound the following numbers:
+    // ADDITION: result (sum)
+    // SUBTRACTION: 1st operand
+    // MULTIPLICATION: result (product)
+    // DIVISION: 1st operand
 
+    // TODO: In case of MULTIPLICATION/DIVISION the product/1st operand can fall ourside of the [min, max] interval; this could be fixed later
+    public static Exercise GenerateRandomExerciseForOperation(Operation operation, int min, int max)
+    {
+        int sum, diff, prod, quot, oper1, oper2;
         switch (operation)
         {
             case Operation.ADDITION:
-                y = random.Next(1, max);
-                z = x + y;
-                break;
-			case Operation.SUBTRACTION:
-				y = random.Next(1, x);
-				z = x - y;
-				break;
-			case Operation.MULTIPLICATION:
-				y = random.Next(0, max);
-				z = x * y;
-				break;
-            case Operation.DIVISION:
-                y = x % (max/10);
-                x = y * random.Next(1, 11);
-                z = x / y;
-                break;
-		}
-
-        return new Exercise(x, y, z, operation);
+                sum = GenerateRandomNumberInclusive(min, max);
+                oper1 = GenerateRandomNumberInclusive(1, sum - 1);
+                oper2 = sum - oper1;
+                return new Exercise(oper1, oper2, sum, operation);
+            case Operation.SUBTRACTION:
+                oper1 = GenerateRandomNumberInclusive(min, max);
+                oper2 = GenerateRandomNumberInclusive(1, oper1 - 1);
+                diff = oper1 - oper2;
+                return new Exercise(oper1, oper2, diff, operation);
+            case Operation.MULTIPLICATION:
+                prod = GenerateRandomNumberInclusive(min, max);
+                oper1 = GenerateRandomNumberInclusive(1, prod / 2);
+                oper2 = prod / oper1;
+                prod = oper1 * oper2;
+                return new Exercise(oper1, oper2, prod, operation);
+            default: // Operation.DIVISION
+                oper1 = GenerateRandomNumberInclusive(min, max);
+                oper2 = GenerateRandomNumberInclusive(1, oper1 / 2);
+                quot = oper1 / oper2;
+                oper1 = oper2 * quot;
+                return new Exercise(oper1, oper2, quot, operation);
+        }
     }
 
-    public static Exercise GenerateRandomExercise(Grade grade)
+    public static Exercise GenerateRandomExerciseForOperationAndDigits(Operation operation, int digits)
     {
-        // TODO
-        return new Exercise(1, 2, 3, Operation.ADDITION);
+        return GenerateRandomExerciseForOperation(operation, 10 ^ (digits - 1), 10 ^ digits - 1);
     }
 
-    public static Exercise GenerateRandomExercise(Grade grade, int digits)
+    public static Exercise GenerateRandomExerciseForGrade(Grade grade)
     {
-        // TODO
-        return new Exercise(1, 2, 3, Operation.ADDITION);
+        Operation operation =
+            (grade == Grade.FIRST) ?
+            GenerateRandomOperationAddSub() :
+            GenerateRandomOperation();
+        switch (grade)
+        {
+            case Grade.FIRST:
+                return GenerateRandomExerciseForOperation(operation, 1, 20);
+            case Grade.SECOND:
+                return GenerateRandomExerciseForOperation(operation, 10, 99);
+            case Grade.THIRD:
+                return GenerateRandomExerciseForOperation(operation, 100, 999);
+            default: // Grade.FOURTH
+                return GenerateRandomExerciseForOperation(operation, 1000, 9999);
+        }
+    }
+
+    public static Exercise GenerateRandomExerciseForGradeAndResult(Grade grade, int result)
+    {
+        // TODO: implement other operations
+        return GenerateRandomExerciseForOperation(Operation.ADDITION, result, result);
+    }
+
+    public static Exercise GenerateRandomExerciseForGradeAndDigits(Grade grade, int digits)
+    {
+        Operation operation =
+            (grade == Grade.FIRST) ?
+            GenerateRandomOperationAddSub() :
+            GenerateRandomOperation();
+        return GenerateRandomExerciseForOperationAndDigits(operation, digits);
+        // TODO: Intersect with boundaries in GenerateRandomExerciseForGrade(). Example: FIRST grade, 3 digits -> still [1, 20] interval
     }
 }
