@@ -62,7 +62,8 @@ public class Exercise
 
     public String ExerciseStringWithoutResult()
     {
-        return this.operand1 + " " + GetOperationSign() + " " + this.operand2 + " = ?";
+        //return this.operand1 + " " + GetOperationSign() + " " + this.operand2 + " = ?";
+        return this.operand1 + " " + GetOperationSign() + " " + this.operand2;
     }
 }
 
@@ -110,6 +111,8 @@ public class GameHelper
     // SUBTRACTION: 1st operand
     // MULTIPLICATION: result (product)
     // DIVISION: 1st operand
+
+    // TODO: In case of MULTIPLICATION/DIVISION the product/1st operand can fall ourside of the [min, max] interval; this could be fixed later
     public static Exercise GenerateRandomExerciseForOperation(Operation operation, int min, int max)
     {
         int sum, diff, prod, quot, oper1, oper2;
@@ -162,6 +165,12 @@ public class GameHelper
             default: // Grade.FOURTH
                 return GenerateRandomExerciseForOperation(operation, 1000, 9999);
         }
+    }
+
+    public static Exercise GenerateRandomExerciseForGradeAndResult(Grade grade, int result)
+    {
+        // TODO: implement other operations
+        return GenerateRandomExerciseForOperation(Operation.ADDITION, result, result);
     }
 
     public static Exercise GenerateRandomExerciseForGradeAndDigits(Grade grade, int digits)

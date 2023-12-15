@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -45,34 +46,54 @@ class ColorField
 public class Coloring
 {
     private List<(ColorField, Exercise)> fields = new List<(ColorField, Exercise)>();
-    private List<(ColorCode, int)> colors = new List<(ColorCode, int)>();
-    private int currentSelectedColorIndex;
+    private Dictionary<ColorCode, int> colors = new Dictionary<ColorCode, int>();
+    private ColorCode currentSelectedColor;
 
-    public Coloring(List<ColorCode> colorCodeList, Grade grade)
+    public Coloring(List<ColorCode> fieldList, Grade grade)
     {
-        List<ColorCode> distinctColorCodes = colorCodeList.Distinct().ToList();
-        // TODO: generate numbers
-        foreach (var item in distinctColorCodes)
+        // Create a corresponding number to each color code that appears in the level
+        List<ColorCode> distinctColorCodes = fieldList.Distinct().ToList();
+        List<int> numbersToColors = new List<int>();
+        while (numbersToColors.Count < distinctColorCodes.Count)
         {
-            this.colors.Add((item, -1));
+            int randomNumber = GameHelper.GenerateRandomNumberInclusive(2, Math.Max(distinctColorCodes.Count, 20)); // TODO: range based on grade
+            if (!numbersToColors.Contains(randomNumber))
+            {
+                numbersToColors.Add(randomNumber);
+            }
+        }
+        for (int i = 0; i < distinctColorCodes.Count; i++)
+        {
+            this.colors[distinctColorCodes[i]] = numbersToColors[i];
         }
 
-        foreach (var item in colorCodeList)
+        // Create exercises for each field
+        foreach (var color in fieldList)
         {
-            this.fields.Add((new ColorField(item), GameHelper.GenerateRandomExerciseForGrade(grade))); // TODO: generate exercise based on result
+            this.fields.Add((new ColorField(color), GameHelper.GenerateRandomExerciseForGradeAndResult(grade, colors[color])));
         }
 
-        this.currentSelectedColorIndex = 0;
+        this.currentSelectedColor = distinctColorCodes[0];
     }
 
-    public void SelectColor(int index)
+    public List<(ColorCode, int)> GetColorsAndNumbers()
     {
-        this.currentSelectedColorIndex = index;
+        List<(ColorCode, int)> colorsAndNumbers = new List<(ColorCode, int)>();
+        foreach (var color in this.colors.Keys)
+        {
+            colorsAndNumbers.Add((color, colors[color]));
+        }
+        return colorsAndNumbers;
+    }
+
+    public void SelectColor(ColorCode color)
+    {
+        this.currentSelectedColor = color;
     }
 
     public bool ColorField(int index)
     {
-        if (!this.fields[index].Item1.GetColored() && this.fields[index].Item1.GetColorCode() == this.colors[currentSelectedColorIndex].Item1)
+        if (!this.fields[index].Item1.GetColored() && this.fields[index].Item1.GetColorCode() == currentSelectedColor)
         {
             this.fields[index].Item1.SetColored();
             return true;
@@ -93,9 +114,9 @@ public class Coloring
         return this.fields[index].Item1.GetColorCode();
     }
 
-    public Exercise GetFieldLabel(int index)
+    public String GetFieldLabel(int index)
     {
-        return this.fields[index].Item2;
+        return this.fields[index].Item2.ExerciseStringWithoutResult();
     }
 
     public bool IsFinished()
