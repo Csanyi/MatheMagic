@@ -51,7 +51,7 @@ public class BoatScript : MonoBehaviour
             {
                 FinishIsCalled = true;
                 ClearLevelScript script = clearLevelPopup.GetComponentInChildren<ClearLevelScript>();
-                script.ScenetToLoad = 8;
+                script.SceneToLoad = 8;
                 clearLevelPopup.SetActive(true);
                 await script.TaskCompleted();
             }
