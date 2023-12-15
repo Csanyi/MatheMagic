@@ -50,7 +50,7 @@ public class ColorScript : MonoBehaviour
         {
             finishCalled = true;
             ClearLevelScript script = clearLevelPopup.GetComponentInChildren<ClearLevelScript>();
-            script.ScenetToLoad = 5;
+            script.SceneToLoad = 5;
             clearLevelPopup.SetActive(true);
             await script.TaskCompleted();
         }

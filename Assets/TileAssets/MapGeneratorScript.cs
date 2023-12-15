@@ -85,7 +85,7 @@ public class MapGeneratorScript : MonoBehaviour
                 if (TileLevel.IsFinished())
                 {
                     ClearLevelScript script = clearLevelPopup.GetComponentInChildren<ClearLevelScript>();
-                    script.ScenetToLoad = 8;
+                    script.SceneToLoad = 8;
                     clearLevelPopup.SetActive(true);
                     await script.TaskCompleted();
                 }
