@@ -10,7 +10,7 @@ public class Travel
         this.grade = grade;
         this.length = length;
         this.currentPositionOnPath = 0;
-        this.currentExercise = GameHelper.GenerateRandomExercise(this.grade);
+        this.currentExercise = GameHelper.GenerateRandomExerciseForGrade(this.grade);
     }
 
     public int GetLength()
@@ -38,7 +38,7 @@ public class Travel
         if (result == this.currentExercise.GetResult())
         {
             ++this.currentPositionOnPath;
-            this.currentExercise = this.IsFinished() ? null : GameHelper.GenerateRandomExercise(this.grade);
+            this.currentExercise = this.IsFinished() ? null : GameHelper.GenerateRandomExerciseForGrade(this.grade);
             return true;
         }
         else

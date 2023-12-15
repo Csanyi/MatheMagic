@@ -8,7 +8,7 @@ public class Lock
 
     public Lock(int digits)
     {
-        this.exercise = GameHelper.GenerateRandomExercise(
+        this.exercise = GameHelper.GenerateRandomExerciseForOperationAndDigits(
             GameHelper.GenerateRandomBool() ? Operation.ADDITION : Operation.SUBTRACTION,
             digits);
         this.lockDigits = new int[GetDigitCnt(this.exercise.GetResult())];
