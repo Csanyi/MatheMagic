@@ -56,7 +56,7 @@ public class Coloring
         List<int> numbersToColors = new List<int>();
         while (numbersToColors.Count < distinctColorCodes.Count)
         {
-            int randomNumber = GameHelper.GenerateRandomNumberInclusive(2, Math.Max(distinctColorCodes.Count, 20)); // TODO: range based on grade
+            int randomNumber = GameHelper.GenerateRandomNumberInclusive(2, Math.Max(distinctColorCodes.Count + 1, 20)); // TODO: range based on grade
             if (!numbersToColors.Contains(randomNumber))
             {
                 numbersToColors.Add(randomNumber);
