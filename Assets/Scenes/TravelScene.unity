@@ -1184,6 +1184,7 @@ MonoBehaviour:
   DispText: {fileID: 355329990}
   DispExercise: {fileID: 949411352}
   boatIsMoving: 0
+  canvas: {fileID: 2026667917}
 --- !u!1 &517532227
 GameObject:
   m_ObjectHideFlags: 0
@@ -1500,7 +1501,7 @@ Transform:
   m_GameObject: {fileID: 615617067}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -1, z: -10}
+  m_LocalPosition: {x: 0.02, y: -1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7589,10 +7590,10 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1865485312}
+  - {fileID: 564641977}
   - {fileID: 2026667920}
   - {fileID: 615617070}
   - {fileID: 259108600}
   - {fileID: 1424283835}
   - {fileID: 1181628931}
   - {fileID: 568715945}
-  - {fileID: 564641977}

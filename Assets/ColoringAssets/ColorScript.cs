@@ -1,3 +1,4 @@
+using Assets.Scripts.Persistence;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,10 @@ public class ColorScript : MonoBehaviour
     private Button[] paints;
     private int selectedFragmentInd;
     private bool finishCalled = false;
+    private Grade grade;
 
     [SerializeField] private GameObject clearLevelPopup;
+    [SerializeField] private Canvas canvas;
 
     private Color lightBlue = new Color(0.5f, 0.5f, 1f);
     private Dictionary<ColorCode, Color> colorCode2Color = new Dictionary<ColorCode, Color>(){
@@ -54,31 +57,45 @@ public class ColorScript : MonoBehaviour
         }
     }
 
-    void Start()
+    async void Start()
     {
-        List<ColorCode> ColorList = new List<ColorCode>();
+        var Db = new Database();
+        User user = await Db.GetUserAsync();
 
-        fragments = GameObject.FindGameObjectsWithTag("Color Field");
-        paints = Palette.GetComponentsInChildren<Button>();
-        Debug.Log(paints.Length);
-        for (int i = 0; i < fragments.Length; i++)
+        canvas.sortingOrder -= 1;
+
+        if (user is not null)
         {
-            ColorList.Add(fragments[i].GetComponent<FragScript>().color);
+            grade = (Grade)(user.Class - 1);
+            List<ColorCode> ColorList = new List<ColorCode>();
+
+            fragments = GameObject.FindGameObjectsWithTag("Color Field");
+            paints = Palette.GetComponentsInChildren<Button>();
+            Debug.Log(paints.Length);
+            for (int i = 0; i < fragments.Length; i++)
+            {
+                ColorList.Add(fragments[i].GetComponent<FragScript>().color);
+            }
+
+            ColoringLevel = new Coloring(ColorList, Grade.FIRST);
+            //we need a getter in the game logic class
+            ColorList = ColorList.Distinct().ToList();
+            for (int i = 0; i < ColorList.Count; i++)
+            {
+                paints[i].GetComponent<FragScript>().color = ColorList[i];
+                paints[i].GetComponent<Image>().color = colorCode2Color[ColorList[i]];
+            }
+
+            for (int i = 0; i < paints.Length; i++)
+            {
+                Button temp = paints[i];
+                paints[i].GetComponent<Button>().onClick.AddListener(delegate { PaletteOnClick(temp); });
+            }
         }
-
-        ColoringLevel = new Coloring(ColorList, Grade.FIRST);
-        //we need a getter in the game logic class
-        ColorList = ColorList.Distinct().ToList();
-        for (int i = 0;i < ColorList.Count;i++)
+        else
         {
-            paints[i].GetComponent<FragScript>().color = ColorList[i];
-            paints[i].GetComponent<Image>().color = colorCode2Color[ColorList[i]];
-        }
-
-        for (int i = 0; i <paints.Length; i++)
-        {
-            Button temp = paints[i];
-            paints[i].GetComponent<Button>().onClick.AddListener(delegate { PaletteOnClick(temp); });
+            Debug.LogWarning("User is null.");
+            // some kind of error popup
         }
     }
 

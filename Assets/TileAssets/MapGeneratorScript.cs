@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Scripts.Persistence;
 
 public class MapGeneratorScript : MonoBehaviour
 {
@@ -20,25 +21,43 @@ public class MapGeneratorScript : MonoBehaviour
     public Sprite wrongAsnwerSprite;
     public Sprite correctAsnwerSprite;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Vector3 offset = new Vector3(-400, -300, 0);
+    [SerializeField] private Canvas canvas;
 
-        for (int i = 0; i < rows; i++)
-        {
-            for(int j = 0; j < cols; j++)
+    // Start is called before the first frame update
+    async void Start()
+    {
+        var db = new Database();
+        User user = await db.GetUserAsync();
+
+        canvas.sortingOrder -= 1;
+
+        if (user  is not null)
+        {        
+            Vector3 offset = new Vector3(-400, -300, 0);
+            for (int i = 0; i < rows; i++)
             {
-                int x = i;
-                int y = j;
-                GameObject newTile = Instantiate(tilePrefab);
-                newTile.transform.SetParent(mainCanvas.transform, false);
-                newTile.GetComponent<RectTransform>().localPosition = new Vector3(j * spriteWidth, i * spriteHeight, 0) + offset;
-                newTile.name = "Tile_" + x.ToString() + y.ToString();
-                newTile.GetComponent<Button>().onClick.AddListener(delegate { tileOnClick(newTile, x, y); } );
-                newTile.GetComponentInChildren<TextMeshProUGUI>().text = gameLogic.GetTileNumber(x, y).ToString();
+                for(int j = 0; j < cols; j++)
+                {
+                    int x = i;
+                    int y = j;
+                    GameObject newTile = Instantiate(tilePrefab);
+                    newTile.transform.SetParent(mainCanvas.transform, false);
+                    newTile.GetComponent<RectTransform>().localPosition = new Vector3(j * spriteWidth, i * spriteHeight, 0) + offset;
+                    newTile.name = "Tile_" + x.ToString() + y.ToString();
+                    newTile.GetComponent<Button>().onClick.AddListener(delegate { tileOnClick(newTile, x, y); } );
+                    newTile.GetComponentInChildren<TextMeshProUGUI>().text = gameLogic.GetTileNumber(x, y).ToString();
+                }
             }
+
+
         }
+        else
+        {
+            Debug.LogWarning("User is null.");
+            // some kind of error popup
+        }
+
+
     }
 
     public void tileOnClick(GameObject tile, int x, int y)
