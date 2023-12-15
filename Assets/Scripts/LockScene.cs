@@ -119,7 +119,7 @@ public class LockScene : MonoBehaviour
 		{
 			DisableButtons();
 			ClearLevelScript script = clearLevelPopup.GetComponentInChildren<ClearLevelScript>();
-			script.SceneToLoad = 5;
+			script.SceneToLoad = 6;
 			clearLevelPopup.SetActive(true);
 			await script.TaskCompleted();
 		}
