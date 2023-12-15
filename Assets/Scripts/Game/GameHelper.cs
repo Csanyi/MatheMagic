@@ -47,9 +47,9 @@ public class Exercise
             case Operation.SUBTRACTION:
                 return "-";
             case Operation.MULTIPLICATION:
-                return "�";
+                return "x";
             case Operation.DIVISION:
-                return "�";
+                return "/";
             default:
                 return "";
         }

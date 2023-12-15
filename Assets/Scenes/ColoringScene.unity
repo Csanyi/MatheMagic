@@ -1573,6 +1573,7 @@ MonoBehaviour:
   DispExercise: {fileID: 1047144834}
   Palette: {fileID: 1705417202}
   clearLevelPopup: {fileID: 1691230475}
+  canvas: {fileID: 869561311}
 --- !u!1 &869561308
 GameObject:
   m_ObjectHideFlags: 0

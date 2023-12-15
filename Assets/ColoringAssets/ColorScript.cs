@@ -40,10 +40,9 @@ public class ColorScript : MonoBehaviour
 
     async public void PaletteOnClick(Button PaintButton)
     {
-        int colInd = System.Array.IndexOf(paints, PaintButton);
         if (selectedFragment != null && selectedFragment.GetComponent<FragScript>().color == PaintButton.GetComponent<FragScript>().color)
         {
-            ColoringLevel.SelectColor(colInd);
+            ColoringLevel.SelectColor(PaintButton.GetComponent<FragScript>().color);
             ColoringLevel.ColorField(selectedFragmentInd);
             selectedFragment.GetComponent<SpriteRenderer>().color = colorCode2Color[selectedFragment.GetComponent<FragScript>().color];
         }
@@ -77,13 +76,13 @@ public class ColorScript : MonoBehaviour
                 ColorList.Add(fragments[i].GetComponent<FragScript>().color);
             }
 
-            ColoringLevel = new Coloring(ColorList, Grade.FIRST);
-            //we need a getter in the game logic class
-            ColorList = ColorList.Distinct().ToList();
-            for (int i = 0; i < ColorList.Count; i++)
+            ColoringLevel = new Coloring(ColorList, grade);
+            List<(ColorCode, int)> CodesandNumbers = ColoringLevel.GetColorsAndNumbers();
+            for (int i = 0; i < CodesandNumbers.Count; i++)
             {
-                paints[i].GetComponent<FragScript>().color = ColorList[i];
-                paints[i].GetComponent<Image>().color = colorCode2Color[ColorList[i]];
+                paints[i].GetComponent<FragScript>().color = CodesandNumbers[i].Item1;
+                paints[i].GetComponent<Image>().color = colorCode2Color[CodesandNumbers[i].Item1];
+                paints[i].GetComponentInChildren<TextMeshProUGUI>().text = CodesandNumbers[i].Item2.ToString();
             }
 
             for (int i = 0; i < paints.Length; i++)
@@ -117,7 +116,7 @@ public class ColorScript : MonoBehaviour
                     selectedFragment = tempFragment;
                     selectedFragmentInd = tempInd;
                     selectedFragment.GetComponent<SpriteRenderer>().color = Color.gray;
-                    DispExercise.GetComponentInChildren<TextMeshProUGUI>().text = ColoringLevel.GetFieldLabel(selectedFragmentInd).ExerciseStringWithoutResult();
+                    DispExercise.GetComponentInChildren<TextMeshProUGUI>().text = ColoringLevel.GetFieldLabel(selectedFragmentInd);
                 }
                 
             }
